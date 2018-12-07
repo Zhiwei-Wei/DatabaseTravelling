@@ -1,0 +1,48 @@
+.header a{
+    text-decoration: none;
+}
+.header a:link{
+    color: black;
+}
+.header a:visited{
+    color: black;
+}
+.header a:hover{
+    color: #474BFF;
+}
+.header a.header_tag:link{
+    padding: 0px 5px;
+    color: #0000EE;
+}
+.header a.header_tag:visited{
+    padding: 0px 5px;
+    color: #0000EE;
+}
+.header a.header_tag:hover{
+    padding: 0px 5px;
+    color: #474BFF;
+}
+.ps_left{
+    float: left;
+}
+.ps_right{
+    float: right;
+}
+.clearfix:before,.clearfix:after {
+    display: table;
+    content: " ";
+}
+
+.clearfix:after {
+    clear: both;
+}
+.ps_page{
+    margin-left: 10%;
+    margin-right: 10%;
+}
+.ps_left{
+    float: left;
+}
+.ps_right{
+    float: right;
+}

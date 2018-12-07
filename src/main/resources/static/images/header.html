@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div class="header">
+        <div class="header_logo">
+            <a th:href="/">
+                <img alt="logo" th:src='@{images/logo.jpg}'/>
+            </a>
+        </div>
+        <div class="header_tnav">
+            <ul>
+                <li th:if="${session.uid} != null">请<a th:href="@{/login}">登录</a> 或 <a th:href="@{/register}"></a> </li>
+                <li th:if="${session.uid} gt '0'">欢迎您，<a th:href="@{'/user/'+${session.uid}}" th:value="${session.uname}"></a> </li>
+                <li th:href="">查看订单</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
