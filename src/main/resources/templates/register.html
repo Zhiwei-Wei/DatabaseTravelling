@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/layout.css}">
+</head>
+<body>
+<header th:replace="header::header"></header>
+<form>
+    <input class="text" type="text" id="reg_ph" placeholder="手机号" onblur="checkPhone()"
+           oninput = "checkPhone()">
+    <span id="reg_ph_tip"></span>
+    <br>
+    <input class="text" type="password" id="reg_pw" placeholder="密码" onblur ="checkPassword()"
+    oninput="checkPassword()">
+    <span id="reg_pw_tip"></span>
+    <br>
+    <input class="text" type="text" id="reg_ck" placeholder="验证码" oninput="checkCheck()">
+    <span id="reg_ck_tip"></span>
+    <br>
+    <input type="button" id="btn_check" disabled="disabled" onclick="getCheck(this)" value="获取验证码">
+    <input type="button" id="reg_reg" disabled="disabled" value="注册" onclick="tijiao()">
+</form>
+
+<footer th:replace="footer::footer"></footer>
+<script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+<script>
+    function tijiao() {
+        var fd = {
+            "phone":$('#reg_ph').val(),
+            "password":$('#reg_pw').val(),
+            "check":$('#reg_ck').val()
+        };
+        fd = JSON.stringify(fd);
+        $.ajax(
+            {
+                contentType:'application/json;charset=UTF-8',
+                type:"POST",
+                url:'register',
+                dataType:'json',
+                data:fd,
+                success:function(data) {
+                    if(data.status=='1'){
+                        //注册成功！
+                        window.location.href='/login';
+                    }else if(data.status=='2'){
+                        alert("验证码错误！");
+                    }
+                    else{
+                        //注册失败
+                        alert("注册失败！");
+                    }
+                },
+                error:function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("错误码："+XMLHttpRequest.status);
+                }
+            }
+        )
+    }
+    var countdown=60;
+    var a1 = 0, a2 = 0, a3 = 0, a4 = 0;
+    function checkCheck() {
+        a4 = 0;
+        $('#reg_ck').val($('#reg_ck').val().replace(/[^\d]/g,''));
+        var ck = $('#reg_ck').val();
+        if(ck.length!=6){
+            $('#reg_ck_tip').html("<span style='color: red;'>输入六位验证码！</span>");
+        }else{
+            $('#reg_ck_tip').html("<span style='color: white;width:20px;height:20px;background-color: green;border-radius: 50%'>    √ </span>");
+            a4 = 1;
+            if(a1*a2*a3*a4==1)
+                $('#reg_reg').attr("disabled",false);
+            else
+                $('#reg_reg').attr("disabled",true);
+        }
+    }
+    function settime(obj) {
+        if (countdown == 0) {
+            obj.removeAttribute("disabled");
+            obj.value="获取验证码";
+            countdown = 60;
+            return;
+        } else {
+            obj.setAttribute("disabled", true);
+            obj.value="重新发送(" + countdown + ")";
+            countdown--;
+        }
+        setTimeout(function() {
+                settime(obj) }
+            ,1000)
+    }
+    function getCheck(obj) {
+        //手机验证码注册
+        a1 = 1;
+        if(a1*a2*a3*a4==1)
+            $('#reg_reg').attr("disabled",false);
+        else
+            $('#reg_reg').attr("disabled",true);
+        var phone = $('#reg_ph').val();
+        settime(obj);
+        $.ajax(
+            {
+                type:'GET',
+                url:'sms?phone='+phone,
+                dataType:'json',
+                success:function (data) {
+                    if(data.status=='00000'){
+                        //发送成功！
+
+                    }else{
+                        alert("验证码发送失败，请联系管理员");
+                    }
+                },
+                error:function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("错误码："+XMLHttpRequest.status);
+                }
+            }
+        )
+    }
+    function checkPhone() {
+        //post访问/register/check_phone，获得手机号是否重复以及是否合法
+        a2 = 0;
+        $('#reg_ph').val($('#reg_ph').val().replace(/[^\d]/g,''));
+        $('#btn_check').attr("disabled",true);
+        var phone = $('#reg_ph').val();
+        if(phone.length!=11)
+            $('#reg_ph_tip').html("<span style='color: red;'>手机号格式错误！</span>");
+        else{
+            //用ajax访问查看是否已注册过
+            $.ajax(
+                {
+                    type:'GET',
+                    url:'register/checkPhone?phone='+phone,
+                    dataType:'json',
+                    success:function (data) {
+                        var status = parseInt(data.msg);
+                        if(status==1){
+                            $('#reg_ph_tip').html("<span style='color: red;'>手机号格式错误！</span>");
+                        }else if(status==7){
+                            $('#reg_ph_tip').html("<span style='color: red;'>该手机号已注册，请<a href='/login'>登录</a>！</span>");
+                        }else if(status==6){
+                            $('#btn_check').attr("disabled",false);
+                            a2 = 1;
+                            $('#reg_ph_tip').html("<span style='color: white;width:20px;height:20px;background-color: green;border-radius: 50%'>    √ </span>");
+                            if(a1*a2*a3*a4==1)
+                                $('#reg_reg').attr("disabled",false);
+                            else
+                                $('#reg_reg').attr("disabled",true);
+                        }
+                    },
+                    error:function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert("错误码："+XMLHttpRequest.status);
+                    }
+                }
+            )
+
+        }
+    }
+    function checkPassword() {
+        //本地浏览器确定密码是否合法
+        a3 = 0;
+        var password = $('#reg_pw').val();
+        if (password.length < 8 || password.length > 20)
+            $('#reg_pw_tip').html("<span style='color: red;'>密码为8-20位！</span>");
+        else if (!(password.match(("[a-z]+")) && password.match("[0-9]+") && password.match("[A-Z]")))
+            $('#reg_pw_tip').html("<span style='color: red;'>密码需要由大写、小写、数字组成！</span>");
+        else {
+            $('#reg_pw_tip').html("<span style='color: white;width:20px;height:20px;background-color: green;border-radius: 50%'> √ </span>");
+            a3 = 1;
+            if(a1*a2*a3*a4==1)
+                $('#reg_reg').attr("disabled",false);
+            else
+                $('#reg_reg').attr("disabled",true);
+        }
+    }
+</script>
+</body>
+</html>

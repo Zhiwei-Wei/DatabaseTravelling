@@ -1,24 +1,24 @@
-.header a{
+a{
     text-decoration: none;
 }
-.header a:link{
+a:link{
     color: black;
 }
-.header a:visited{
+a:visited{
     color: black;
 }
-.header a:hover{
+a:hover{
     color: #474BFF;
 }
-.header a.header_tag:link{
+a.header_tag:link{
     padding: 0px 5px;
     color: #0000EE;
 }
-.header a.header_tag:visited{
+a.header_tag:visited{
     padding: 0px 5px;
     color: #0000EE;
 }
-.header a.header_tag:hover{
+a.header_tag:hover{
     padding: 0px 5px;
     color: #474BFF;
 }
@@ -45,4 +45,52 @@
 }
 .ps_right{
     float: right;
+}
+.travel_container ul.travel_cities{
+    display: none;
+}
+.travel_pr:hover .travel_cities{
+    z-index: 3;
+    position:absolute;
+    display: inline;
+}
+.travel_pr{
+    display: inline;
+    padding: 5px;
+}
+.header_mnav li{
+    display: inline-block;
+}
+.header_mnav li:after{
+    content:" |"
+}
+.header_mnav li:last-child:after{
+    content:""
+}
+.header_tnav li{
+    display: inline-block;
+}
+.header_tnav{
+    float:right;
+}
+.header_tnav li:after{
+    content:" |"
+}
+.header_tnav li:last-child:after{
+    content:""
+}
+html, body {
+    height: 100%;
+}
+footer{
+    margin-top: 10px;
+    border-top: 1px solid #ddd;
+    font-size: 12px;
+    text-align: center;
+    color: rgba(0,0,0,.5);
+}
+footer p{
+    line-height: 30px;
+    margin: 0;
+    padding: 0;
 }

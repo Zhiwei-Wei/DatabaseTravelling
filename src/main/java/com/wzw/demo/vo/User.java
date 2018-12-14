@@ -1,12 +1,11 @@
 package com.wzw.demo.vo;
 
 public class User {
-    public static final Integer CUSTOMER=1,COMPANY=2;
+    public static final Integer CUSTOMER=1,COMPANY=2,ADMIN=3;
     private Integer uid,role;
     private String nickname;
-    private String userName;
     private String password;
-    private String phone,email;
+    private String phone;
 
     public String getNickname() {
         return nickname;
@@ -22,14 +21,6 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public Integer getUid() {
@@ -48,13 +39,6 @@ public class User {
         this.role = role;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
 
     public String getPassword() {
         return password;

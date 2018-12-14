@@ -11,13 +11,14 @@
             <ul>
                 <li>
                     <span th:if="${session.uid==null}">请<a class="header_tag" th:href="@{/login}">登录</a>或<a class="header_tag" th:href="@{/register}">注册账号</a> </span>
-                    <span th:if="${session.uid!=null}">欢迎您，<a th:href="@{'/user/'+${session.uid}}" th:value="${session.realname}"></a></span>
+                    <span th:if="${session.uid!=null}">欢迎您，<a th:href="@{'/user/'+${session.uid}}" th:text="${session.nickname}"></a></span>
                 </li>
                 <li>
                     <span th:if="${session.uid!=null}"><a th:href="@{'/myorder?'+${session.uid}}">查看订单</a></span>
                     <span th:if="${session.uid==null}"><a th:href="@{/login}">查看订单</a></span>
                 </li>
                 <li><a href="http://www.baidu.com" target="_blank" title="百度啊！">联系客服</a></li>
+                <li th:if="${session.uid!=null}"><a th:href="@{/logout}" style="color: red;">退出</a> </li>
             </ul>
         </div>
         <div class="header_mnav">
@@ -26,7 +27,7 @@
                 <li class="header_ptr header_ptr_cur"><a th:href="@{/notdone}">机票</a></li>
                 <li class="header_ptr header_ptr_cur"><a th:href="@{/notdone}">酒店</a></li>
                 <li class="header_ptr header_ptr_cur"><a th:href="@{/notdone}">团购</a></li>
-                <li class="header_ptr header_ptr_cur"><a th:href="@{/index}">旅行</a></li>
+                <li class="header_ptr header_ptr_cur"><a th:href="@{/travel}">旅行</a></li>
                 <li class="header_ptr header_ptr_cur"><a th:href="@{/notdone}">攻略</a></li>
                 <li class="header_ptr header_ptr_cur"><a th:href="@{/insurance}">保险</a></li>
             </ul>
