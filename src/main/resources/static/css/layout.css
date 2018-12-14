@@ -58,20 +58,29 @@ a.header_tag:hover{
     display: inline;
     padding: 5px;
 }
+.header_mnav{
+    margin: 30px 10px;
+}
 .header_mnav li{
     display: inline-block;
+    padding: 5px 20px;
+    border-radius: 20px;
+    transition: all 0.5s ease 0s;
+    border:1px solid #3333;
 }
-.header_mnav li:after{
-    content:" |"
-}
-.header_mnav li:last-child:after{
-    content:""
+.header_mnav li:hover{
+    background: yellow;
+    box-shadow: 3px 3px 2px #333333;
 }
 .header_tnav li{
     display: inline-block;
 }
 .header_tnav{
-    float:right;
+    top: 10px;
+    right:10px;
+    font-size:0.8em;
+    position: absolute;
+    margin-right: 20px;
 }
 .header_tnav li:after{
     content:" |"
@@ -93,4 +102,221 @@ footer p{
     line-height: 30px;
     margin: 0;
     padding: 0;
+}
+header{
+    background: white;
+}
+header.over{
+    position:fixed;
+    width:100%;
+    height:auto;
+    overflow-y:auto;
+    box-shadow: 3px 3px 2px #333333;
+}
+.travel_container{
+    margin:0px 10%;
+}
+.travel_items_order li{
+    display: inline-block;
+}
+.travel_items_holder>div{
+    display: inline-block;
+}
+.travel_top_page{
+    float: right;
+}
+travel_items .text{
+    display: inline-block;
+    width: 70px;
+    padding: 2px 10px;
+    text-align:-webkit-center;
+    height: 25px;
+    border-radius: 10px;
+    overflow-x: auto;
+}
+
+/* Reset */
+*,
+*:after,
+*:before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+/* Clearfix hack by Nicolas Gallagher: http://nicolasgallagher.com/micro-clearfix-hack/ */
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+.form-horizontal{
+    background: #DED5DE;
+    padding-bottom: 40px;
+    border-radius: 15px;
+    text-align: center;
+}
+.form-horizontal .heading{
+    display: block;
+    font-size: 35px;
+    font-weight: 700;
+    padding: 35px 0;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 30px;
+}
+.form-horizontal .form-group{
+    padding: 0 40px;
+    margin: 0 0 25px 0;
+    position: relative;
+}
+.form-horizontal .form-control{
+    background: #f0f0f0;
+    border: none;
+    border-radius: 20px;
+    box-shadow: none;
+    padding: 0 20px 0 45px;
+    height: 40px;
+    transition: all 0.3s ease 0s;
+}
+.form-horizontal .form-control:focus{
+    background: #e0e0e0;
+    box-shadow: none;
+    outline: 0 none;
+}
+.form-horizontal .form-group i{
+    position: absolute;
+    top: 12px;
+    left: 60px;
+    font-size: 17px;
+    color: #c8c8c8;
+    transition : all 0.5s ease 0s;
+}
+.form-horizontal .form-control:focus + i{
+    color: #00b4ef;
+}
+.form-horizontal .fa-question-circle{
+    display: inline-block;
+    position: absolute;
+    top: 12px;
+    right: 60px;
+    font-size: 20px;
+    color: #808080;
+    transition: all 0.5s ease 0s;
+}
+.form-horizontal .fa-question-circle:hover{
+    color: #000;
+}
+.form-horizontal .main-checkbox{
+    float: left;
+    width: 20px;
+    height: 20px;
+    background: #11a3fc;
+    border-radius: 50%;
+    position: relative;
+    margin: 5px 0 0 5px;
+    border: 1px solid #11a3fc;
+}
+.form-horizontal .main-checkbox label{
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+}
+.form-horizontal .main-checkbox label:after{
+    content: "";
+    width: 10px;
+    height: 5px;
+    position: absolute;
+    top: 5px;
+    left: 4px;
+    border: 3px solid #fff;
+    border-top: none;
+    border-right: none;
+    background: transparent;
+    opacity: 0;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+.form-horizontal .main-checkbox input[type=checkbox]{
+    visibility: hidden;
+}
+.form-horizontal .main-checkbox input[type=checkbox]:checked + label:after{
+    opacity: 1;
+}
+.form-horizontal .text{
+    float: left;
+    margin-left: 7px;
+    font-size: 13px;
+    color: #646464;
+    line-height: 13px;
+    padding-top: 5px;
+    text-transform: capitalize;
+}
+.form-horizontal .btn{
+    float: right;
+    font-size: 15px;
+    color: #fff;
+    background: #00b4ef;
+    border-radius: 30px;
+    border: none;
+    text-transform: capitalize;
+    transition: all 0.5s ease 0s;
+}
+.btn-default{
+    color: #fff;
+    background: #00b4ef;
+    border-radius: 15px;
+    border: none;
+    text-transform: capitalize;
+    transition: all 0.5s ease 0s;
+}
+.btn-default:hover{
+    background: #0F5CEF;
+    box-shadow: 2px 2px 1px #333333;
+}
+.form-horizontal .btn-default:disabled{
+    color: gray;
+    background: #B6B8DE;
+}
+@media only screen and (max-width: 479px){
+    .form-horizontal .form-group{
+        padding: 0 25px;
+    }
+    .form-horizontal .form-group i{
+        left: 45px;
+    }
+    .form-horizontal .btn{
+        padding: 10px 20px;
+    }
+}
+.tip span{
+    color: white;
+    width:30px;
+    height:30px;
+    border-radius: 50%;
+    display:inline-block;
+}
+.travel_selector li{
+    display: inline-block;
+    margin-left: 30px;
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+.travel_items_holder{
+    border: #B9DEDD 1px solid;
+    padding: 10px;
+}
+.travel_nav{
+    margin: 0px 8%;
+    font-size:0.9em;
+    color:grey;
+}
+.travel_nav label{
+
 }

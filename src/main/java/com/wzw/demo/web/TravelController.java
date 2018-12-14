@@ -2,6 +2,7 @@ package com.wzw.demo.web;
 
 import com.alibaba.fastjson.JSON;
 import com.wzw.demo.repo.GroupRepository;
+import com.wzw.demo.repo.ProvinceCityRepository;
 import com.wzw.demo.repo.RouteRepository;
 import com.wzw.demo.vo.Province;
 import com.wzw.demo.vo.TravelItem;
@@ -23,10 +24,14 @@ public class TravelController {
     GroupRepository groupRepository;
     @Autowired
     RouteRepository routeRepository;
+    @Autowired
+    ProvinceCityRepository provinceCityRepository;
     @RequestMapping(value = "/travel", method = RequestMethod.GET)
     public String travel(Model model, HttpServletRequest request){
-        List<Province> provinces = groupRepository.getDistinations();
-        List<Province> starts = groupRepository.getArrivals();
+//        List<Province> provinces = groupRepository.getDistinations();
+//        List<Province> starts = groupRepository.getArrivals();
+        List<Province> provinces = provinceCityRepository.getAllProvinceCity();
+        List<Province> starts = provinceCityRepository.getAllProvinceCity();
         List<Integer> months = groupRepository.getMonths();
         List<String> services = groupRepository.getServices();
         model.addAttribute("months",months);

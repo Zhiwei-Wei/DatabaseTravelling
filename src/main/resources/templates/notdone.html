@@ -3,9 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>没有做完</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/layout.css}">
 </head>
 <body>
+<header th:replace="header::header"></header>
+
 <h3>没有做完...</h3>
 返回<a th:href="@{/index}">首页</a>⑧
+
+
+<footer th:replace="footer::footer"></footer>
 </body>
 </html>

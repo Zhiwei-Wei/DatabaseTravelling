@@ -7,22 +7,49 @@
 </head>
 <body>
 <header th:replace="header::header"></header>
-<form>
-    <input class="text" type="text" id="reg_ph" placeholder="手机号" onblur="checkPhone()"
-           oninput = "checkPhone()">
-    <span id="reg_ph_tip"></span>
-    <br>
-    <input class="text" type="password" id="reg_pw" placeholder="密码" onblur ="checkPassword()"
-    oninput="checkPassword()">
-    <span id="reg_pw_tip"></span>
-    <br>
-    <input class="text" type="text" id="reg_ck" placeholder="验证码" oninput="checkCheck()">
-    <span id="reg_ck_tip"></span>
-    <br>
-    <input type="button" id="btn_check" disabled="disabled" onclick="getCheck(this)" value="获取验证码">
-    <input type="button" id="reg_reg" disabled="disabled" value="注册" onclick="tijiao()">
-</form>
 
+<div class="ps_page">
+    <div class="ps_page_tit">
+        此处应该有logo
+    </div>
+    <hr>
+    <div class="ps_wrapper clearfix">
+        <div class="ps_left">
+            <div class="ps_login_ad">
+                注册用的广告
+            </div>
+        </div>
+        <div class="ps_right">
+        <div class="demo" style="padding: 20px 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-offset-3 col-md-6">
+                    <form class="form-horizontal">
+                        <span class="heading">用户注册</span>
+                        <div class="form-group">
+                            <input class="form-control" type="text" id="reg_ph" placeholder="手机号" onblur="checkPhone()"
+                                   oninput = "checkPhone()">
+                            <span id="reg_ph_tip" class="tip"><span style="background-color: red;" title="请输入手机号">×</span></span>
+                        </div>
+                        <div class="form-group help">
+                            <input class="form-control" type="password" id="reg_pw" placeholder="密  码" onblur ="checkPassword()"
+                                   oninput="checkPassword()">
+                            <span id="reg_pw_tip" class="tip"><span style="background-color: red;" title="请输入密码">×</span></span>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" type="text" id="reg_ck" placeholder="验证码" oninput="checkCheck()">
+                            <span id="reg_ck_tip" class="tip"><span style="background-color: red;" title="输入六位验证码">×</span></span>
+                        </div>
+                        <button type="button" class="btn-default" id="btn_check" disabled="disabled" onclick="getCheck(this)">获取验证码</button>
+                        <button type="button" class="btn-default" id="reg_reg" disabled="disabled" onclick="tijiao()">注册</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+</div>
 <footer th:replace="footer::footer"></footer>
 <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
 <script>
@@ -65,9 +92,9 @@
         $('#reg_ck').val($('#reg_ck').val().replace(/[^\d]/g,''));
         var ck = $('#reg_ck').val();
         if(ck.length!=6){
-            $('#reg_ck_tip').html("<span style='color: red;'>输入六位验证码！</span>");
+            $('#reg_ck_tip').html("<span style='background-color: red;' title='输入六位验证码！'>×</span>");
         }else{
-            $('#reg_ck_tip').html("<span style='color: white;width:20px;height:20px;background-color: green;border-radius: 50%'>    √ </span>");
+            $('#reg_ck_tip').html("<span style='background-color: green;'>√ </span>");
             a4 = 1;
             if(a1*a2*a3*a4==1)
                 $('#reg_reg').attr("disabled",false);
@@ -125,7 +152,7 @@
         $('#btn_check').attr("disabled",true);
         var phone = $('#reg_ph').val();
         if(phone.length!=11)
-            $('#reg_ph_tip').html("<span style='color: red;'>手机号格式错误！</span>");
+            $('#reg_ph_tip').html("<span style='background-color: red;' title='手机号格式错误！'>×</span>");
         else{
             //用ajax访问查看是否已注册过
             $.ajax(
@@ -136,13 +163,13 @@
                     success:function (data) {
                         var status = parseInt(data.msg);
                         if(status==1){
-                            $('#reg_ph_tip').html("<span style='color: red;'>手机号格式错误！</span>");
+                            $('#reg_ph_tip').html("<span style='background-color: red;' title='手机号格式错误'>×</span>");
                         }else if(status==7){
-                            $('#reg_ph_tip').html("<span style='color: red;'>该手机号已注册，请<a href='/login'>登录</a>！</span>");
+                            $('#reg_ph_tip').html("<span style='background-color: red;' title='该手机号已注册！'>×</span>");
                         }else if(status==6){
                             $('#btn_check').attr("disabled",false);
                             a2 = 1;
-                            $('#reg_ph_tip').html("<span style='color: white;width:20px;height:20px;background-color: green;border-radius: 50%'>    √ </span>");
+                            $('#reg_ph_tip').html("<span style='color: white;background-color: green;border-radius: 50%'>√ </span>");
                             if(a1*a2*a3*a4==1)
                                 $('#reg_reg').attr("disabled",false);
                             else
@@ -162,11 +189,11 @@
         a3 = 0;
         var password = $('#reg_pw').val();
         if (password.length < 8 || password.length > 20)
-            $('#reg_pw_tip').html("<span style='color: red;'>密码为8-20位！</span>");
+            $('#reg_pw_tip').html("<span style='background-color: red;' title='密码为8-20位'>×</span>");
         else if (!(password.match(("[a-z]+")) && password.match("[0-9]+") && password.match("[A-Z]")))
-            $('#reg_pw_tip').html("<span style='color: red;'>密码需要由大写、小写、数字组成！</span>");
+            $('#reg_pw_tip').html("<span style='background-color: red;' title='密码需要由大写、小写、数字组成'>×</span>");
         else {
-            $('#reg_pw_tip').html("<span style='color: white;width:20px;height:20px;background-color: green;border-radius: 50%'> √ </span>");
+            $('#reg_pw_tip').html("<span style='color: white;background-color: green;border-radius: 50%'> √ </span>");
             a3 = 1;
             if(a1*a2*a3*a4==1)
                 $('#reg_reg').attr("disabled",false);
