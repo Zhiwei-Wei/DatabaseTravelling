@@ -30,6 +30,7 @@ public class TravelController {
     public String travel(Model model, HttpServletRequest request){
 //        List<Province> provinces = groupRepository.getDistinations();
 //        List<Province> starts = groupRepository.getArrivals();
+        model.addAttribute("page","lx");
         List<Province> provinces = provinceCityRepository.getAllProvinceCity();
         List<Province> starts = provinceCityRepository.getAllProvinceCity();
         List<Integer> months = groupRepository.getMonths();

@@ -9,7 +9,7 @@
                     <span th:if="${session.uid!=null}">欢迎您，<a th:href="@{'/user/'+${session.uid}}" th:text="${session.nickname}"></a></span>
                 </li>
                 <li>
-                    <span th:if="${session.uid!=null}"><a th:href="@{'/myorder?'+${session.uid}}">查看订单</a></span>
+                    <span th:if="${session.uid!=null}"><a th:href="@{'/myorder/'+${session.uid}}">查看订单</a></span>
                     <span th:if="${session.uid==null}"><a th:href="@{/login}">查看订单</a></span>
                 </li>
                 <li><a href="http://www.baidu.com" target="_blank" title="百度啊！">联系客服</a></li>
@@ -18,13 +18,13 @@
         </div>
         <div class="header_mnav">
             <ul>
-                <li class="header_ptr header_ptr_cur"><a th:href="@{/index}">首页</a></li>
-                <li class="header_ptr header_ptr_cur"><a th:href="@{/notdone}">机票</a></li>
-                <li class="header_ptr header_ptr_cur"><a th:href="@{/notdone}">酒店</a></li>
-                <li class="header_ptr header_ptr_cur"><a th:href="@{/notdone}">团购</a></li>
-                <li class="header_ptr header_ptr_cur"><a th:href="@{/travel}">旅行</a></li>
-                <li class="header_ptr header_ptr_cur"><a th:href="@{/notdone}">攻略</a></li>
-                <li class="header_ptr header_ptr_cur"><a th:href="@{/insurance}">保险</a></li>
+                <li th:class="${page=='sy'?'header_ptr_cur':''}"><a th:href="@{/index}">首页</a></li>
+                <li th:class="${page=='jp'?'header_ptr_cur':''}"><a th:href="@{/jipiao}">机票</a></li>
+                <li th:class="${page=='jd'?'header_ptr_cur':''}"><a th:href="@{/jiudian}">酒店</a></li>
+                <li th:class="${page=='tg'?'header_ptr_cur':''}"><a th:href="@{/tuangou}">团购</a></li>
+                <li th:class="${page=='lx'?'header_ptr_cur':''}"><a th:href="@{/travel}">旅行</a></li>
+                <li th:class="${page=='gl'?'header_ptr_cur':''}"><a th:href="@{/gonglue}">攻略</a></li>
+                <li th:class="${page=='bx'?'header_ptr_cur':''}"><a th:href="@{/baoxian}">保险</a></li>
             </ul>
         </div>
     </header>

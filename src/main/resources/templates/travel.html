@@ -13,16 +13,18 @@
         <!--/*@thymesVar id="provinces" type="java.util.List<com.wzw.demo.vo.Province>"*/-->
         <div class="travel_nav_pr_ct">
             <label>目的地</label>
-            <ul class="travel_selector">
-                <li th:each="province, piterStat:${provinces}"
+            <ul id="tr_dest" class="travel_selector">
+                <li th:name="'d'+${province.provinceId}+'_0'"
+                    th:each="province, piterStat:${provinces}"
                     th:class="${#httpServletRequest.getParameter('dist')!=null && #httpServletRequest.getParameter('dist').split('_')[0] == province.provinceId+'' ? 'selected':''}">
                     <a href="javascript:void(0);" onclick="ajax_getUrl(this,'dist')">
                         <input type="hidden" name="id" th:value="${province.provinceId}+'_0'">
                         <span th:text="${province.name}"></span>
                     </a>
                     <ul class="travel_cities">
-                        <li th:each="city, citerStat:${province.cities}"
-                            th:class="${#httpServletRequest.getParameter('dist')!=null && #httpServletRequest.getParameter('dist').split('_')[1] == city.cityId+'' ? 'selected':''}">
+                        <li th:name="'d'+${province.provinceId}+'_'+${city.cityId}"
+                            th:each="city, citerStat:${province.cities}"
+                            th:class="${#httpServletRequest.getParameter('dist')!=null&&#httpServletRequest.getParameter('arri').split('_')[0] == province.provinceId+'' && #httpServletRequest.getParameter('dist').split('_')[1] == city.cityId+'' ? 'selected':''}">
                             <a href="javascript:void(0);" onclick="ajax_getUrl(this,'dist')">
                                 <span th:text="${city.name}"></span>
                                 <input type="hidden" name="id" th:value="${province.provinceId}+'_'+${city.cityId}">
@@ -49,18 +51,20 @@
         <hr>
         <div class="travel_nav_start">
             <label>出发地</label>
-            <ul class="travel_selector">
+            <ul id="tr_arri" class="travel_selector">
                 <!--/*@thymesVar id="starts" type="java.util.List<com.wzw.demo.vo.Province>"*/-->
-                <li th:each="start:${starts}"
+                <li th:name="'a'+${start.provinceId}+'_0'" th:each="start:${starts}"
                     th:class="${#httpServletRequest.getParameter('arri')!=null&&#httpServletRequest.getParameter('arri').split('_')[0] == start.provinceId+'' ? 'selected':''}">
-                    <a href="javascript:void(0);" onclick="ajax_getUrl(this,'arri')" th:text="${start.name}">
+                    <a href="javascript:void(0);" onclick="ajax_getUrl(this,'arri')">
                         <input type="hidden" name="id" th:value="${start.provinceId}+'_0'">
+                        <span th:text="${start.name}"></span>
                     </a>
-                    <ul>
-                        <li th:each="city:${start.cities}"
-                            th:class="${#httpServletRequest.getParameter('arri')!=null&&#httpServletRequest.getParameter('arri').split('_')[1] == city.cityId+'' ? 'selected':''}">>
-                            <a th:text="${city.name}" href="javascript:void(0);" onclick="ajax_getUrl(this,'arri')" >
+                    <ul class="travel_cities">
+                        <li th:name="'a'+${start.provinceId}+'_'+${city.cityId}" th:each="city:${start.cities}"
+                            th:class="${#httpServletRequest.getParameter('arri')!=null&&#httpServletRequest.getParameter('arri').split('_')[0] == start.provinceId+''&&#httpServletRequest.getParameter('arri').split('_')[1] == city.cityId+'' ? 'selected':''}">
+                            <a href="javascript:void(0);" onclick="ajax_getUrl(this,'arri')" >
                                 <input type="hidden" name="id" th:value="${start.provinceId}+'_'+${city.cityId}">
+                                <span th:text="${city.name}"></span>
                             </a>
                         </li>
                     </ul>
@@ -218,6 +222,23 @@
         $(siblings).each(function () {
            $(this).attr("class","");
         });
+        var tn = $(node.parentNode).attr("name");
+        if(tn!=null && tn!='undefined' && tn.charAt(0)=='a'){
+            var arr = getUrlParam("arri");
+            if(arr!=null && arr!='undefined'){
+                $('#tr_arri').find("li").attr("class","");
+            }
+            var tna = "li[name='"+tn.split("_")[0]+"_0']";
+            $('#tr_arri').find(tna).attr("class","selected");
+        }
+        if(tn!=null && tn!='undefined' && tn.charAt(0)=='d'){
+            var arr = getUrlParam("dist");
+            if(arr!=null && arr!='undefined'){
+                $('#tr_dest').find("li").attr("class","");
+            }
+            var tna = "li[name='"+tn.split("_")[0]+"_0']";
+            $('#tr_dest').find(tna).attr("class","selected");
+        }
         $(node.parentNode).attr("class","selected");
         changeURLArg(name,val);
         ajax_getItems(0);
