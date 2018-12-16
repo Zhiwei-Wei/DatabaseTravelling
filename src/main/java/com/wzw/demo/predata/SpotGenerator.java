@@ -4,6 +4,7 @@ import com.wzw.demo.repo.ProvinceCityRepository;
 import com.wzw.demo.vo.Province;
 import com.wzw.demo.vo.Spot;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -11,9 +12,8 @@ import java.util.List;
 import java.util.Random;
 
 public class SpotGenerator {
-    @Autowired
-    static ProvinceCityRepository provinceCityRepository;
-    public static List<Spot> getSpots(int size){
+    public List<Spot> getSpots(int size,
+                               ProvinceCityRepository provinceCityRepository){
         List<Province> provinces = provinceCityRepository.getAllProvinceCity();
         List<Spot> spots = new ArrayList<>();
         int pcnt = 0,ccnt = 0;

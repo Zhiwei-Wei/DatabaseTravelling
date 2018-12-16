@@ -49,29 +49,31 @@ public class RouteRepository {
         String tmp=orderby;
         String[] s = orderby.split("_");
         if(s[0].equals("pop")){
-            tmp = "cus_cur_num desc, start_time asc, service_level desc";
+            tmp = "g.cus_cur_num desc, g.start_time asc, g.service_level desc";
         }else{
             if(s[0].equals("sales")){
                 s[0] = "cus_cur_num";
             }
             if(s.length>1){
-                tmp = s[0]+" "+s[1];
+                tmp = "g."+s[0]+" "+s[1];
             }
         }
-        final String order = tmp;
+        final String order = tmp+",g.group_id asc ";
+        System.out.println(order);
         int a = (page-1)*PAGESIZE;
+        //使用jdbcTemplate进行参数填充的order by为乱序，无用
         List<TravelItem> travelItems = jdbcTemplate.query(
                 "select g.route_id,g.pic_url,g.title,g.price,g.group_id," +
                         "g.guide_id,g.cus_cur_num,g.cus_max_num,g.days_number,g.start_time," +
-                        "g.service_level from `group` g inner join (select route_id, " +
+                        "g.service_level,g.introduction from `group` g inner join (select route_id, " +
                         "spots_num from route where start_spot_id in (select spot_id " +
-                        "from spot where (?=0 or province_id=?) and end_spot_id in (?=0 or city_id=?)) " +
-                        "and (select spot_id from spot where (?=0 or province_id=?) and " +
+                        "from spot where (?=0 or province_id=?) and (?=0 or city_id=?)) and end_spot_id in " +
+                        " (select spot_id from spot where (?=0 or province_id=?) and " +
                         "(?=0 or city_id=?))) r on g.route_id=r.route_id where" +
                         " start_time > ? and (? = 0 or days_number >= ?) and" +
                         " (? = 0 or days_number <= ?) and (?=0 or price >= ?) and " +
                         "(?=0 or price <= ?) and (?=0 or month(start_time)=?) and " +
-                        "(? = '0' or service_level = ?) order by ? limit ?,?;", new PreparedStatementSetter() {
+                        "(? = '0' or service_level = ?) and g.acitivated='1' order by "+order+" limit ?,?;", new PreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement preparedStatement) throws SQLException {
                         preparedStatement.setInt(1, arri_province);
@@ -82,8 +84,10 @@ public class RouteRepository {
                         preparedStatement.setInt(6, dist_province);
                         preparedStatement.setInt(7, dist_city);
                         preparedStatement.setInt(8, dist_city);
-                        preparedStatement.setString(9, new SimpleDateFormat("yyyy-MM-dd").
-                                format(new Date(new Date().getTime() + 86400000L)));
+                        String date = new SimpleDateFormat("yyyy-MM-dd").
+                                format(new Date(new Date().getTime() + 86400000L));
+//                        System.out.println(date);
+                        preparedStatement.setString(9, date);
                         preparedStatement.setInt(10, min_day);
                         preparedStatement.setInt(11, min_day);
                         preparedStatement.setInt(12, max_day);
@@ -96,9 +100,8 @@ public class RouteRepository {
                         preparedStatement.setInt(19, month);
                         preparedStatement.setString(20, service);
                         preparedStatement.setString(21, service);
-                        preparedStatement.setString(22, order);
-                        preparedStatement.setInt(23, a);
-                        preparedStatement.setInt(24, PAGESIZE);
+                        preparedStatement.setInt(22, a);
+                        preparedStatement.setInt(23, PAGESIZE);
                     }
                 }, new RowMapper<TravelItem>() {
                     @Override
@@ -113,9 +116,10 @@ public class RouteRepository {
                         travelItem.setCurNum(resultSet.getInt(7)+"");
                         travelItem.setMaxNum(resultSet.getInt(8)+"");
                         travelItem.setDays(resultSet.getInt(9)+"");
-                        travelItem.setStartTime(new SimpleDateFormat("yyyy-mm-dd  HH:mm:ss")
+                        travelItem.setStartTime(new SimpleDateFormat("yyyy-MM-dd HH:mm")
                                 .format(resultSet.getDate(10)));
                         travelItem.setService(resultSet.getString(11));
+                        travelItem.setIntroduction(resultSet.getString(12));
                         return travelItem;
                     }
                 });
@@ -123,8 +127,9 @@ public class RouteRepository {
                         "g.guide_id,g.cus_cur_num,g.cus_max_num,g.days_number,g.start_time," +
                         "g.service_level from `group` g inner join (select route_id, " +
                         "spots_num from route where start_spot_id in (select spot_id " +
-                        "from spot where (?=0 or province_id=?) and end_spot_id in (?=0 or city_id=?)) " +
-                        "and (select spot_id from spot where (?=0 or province_id=?) and " +
+                        "from spot where (?=0 or province_id=?) and (?=0 or city_id=?)) " +
+                        "and end_spot_id in " +
+                        "(select spot_id from spot where (?=0 or province_id=?) and " +
                         "(?=0 or city_id=?))) r on g.route_id=r.route_id where" +
                         " start_time > ? and (? = 0 or days_number >= ?) and" +
                         " (? = 0 or days_number <= ?) and (?=0 or price >= ?) and " +

@@ -34,8 +34,8 @@ public class OrderRepository {
      * @return
      */
     public List<Order> getCurOrders(Integer id){//uid应该等于cus_id
-        return jdbcTemplate.query("select gg.group_id,gg.cus_id,gg.contract_id from group_cus_takes gg" +
-                        " inner join `group` g on g.group_id=gg.group_id where cus_id=? and g.activated='1';",
+        return jdbcTemplate.query("select gg.group_id,gg.cus_id from group_cus_takes gg" +
+                        " inner join `group` g on g.group_id=gg.group_id where cus_id=? and g.acitivated='1';",
                 new PreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement preparedStatement) throws SQLException {
@@ -101,8 +101,8 @@ public class OrderRepository {
      * @return
      */
     public List<Order> getHistoryOrders(Integer id){
-        return jdbcTemplate.query("select gg.group_id,gg.cus_id,gg.contract_id from group_cus_takes gg" +
-                        " inner join `group` g on g.group_id=gg.group_id where cus_id=? and g.activated='0';",
+        return jdbcTemplate.query("select gg.group_id,gg.cus_id from group_cus_takes gg" +
+                        " inner join `group` g on g.group_id=gg.group_id where cus_id=? and g.acitivated='0';",
                 new PreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement preparedStatement) throws SQLException {
@@ -120,7 +120,6 @@ public class OrderRepository {
         Order order = new Order();
         order.setGroupId(resultSet.getInt(1));
         order.setUserId(resultSet.getInt(2));
-        order.setContractId(resultSet.getInt(3));
         return order;
     }
 }

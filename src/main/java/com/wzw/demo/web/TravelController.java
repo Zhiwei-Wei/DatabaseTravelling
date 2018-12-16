@@ -87,6 +87,8 @@ public class TravelController {
             maxPrice = Integer.parseInt(str);
         }
         String service = request.getParameter("service");
+        if (service==null)
+            service = "0";
         Object[] objects = routeRepository.getTravelItems(orderby,page,dpr,dct,apr,act,min_day,max_day,
                 minPrice,maxPrice,month,service);
         List<TravelItem> travelItems = (List<TravelItem>)objects[1];

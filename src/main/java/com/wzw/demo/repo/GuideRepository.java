@@ -31,4 +31,20 @@ public class GuideRepository {
                 });
         return strings.size()>0?strings.get(0):null;
     }
+    public Integer getCompanyIdByGuideId(Integer id){
+        List<Integer> integers = jdbcTemplate.query("select e.company_id from employee e inner join guide " +
+                        "g on e.employee_id = g.employee_id where g.guide_id=?;",
+                new PreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                        preparedStatement.setInt(1, id);
+                    }
+                }, new RowMapper<Integer>() {
+                    @Override
+                    public Integer mapRow(ResultSet resultSet, int i) throws SQLException {
+                        return resultSet.getInt(1);
+                    }
+                });
+        return integers.size()>0?integers.get(0):null;
+    }
 }

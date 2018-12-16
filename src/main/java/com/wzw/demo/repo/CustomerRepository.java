@@ -1,6 +1,14 @@
 package com.wzw.demo.repo;
 
+import com.wzw.demo.vo.Customer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * 游客信息查询，游客完善信息
@@ -8,5 +16,22 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class CustomerRepository {
-
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+    public List<Customer> getAllCustomers(){
+        return jdbcTemplate.query("select * from customer;", new RowMapper<Customer>() {
+            @Override
+            public Customer mapRow(ResultSet resultSet, int i) throws SQLException {
+                Customer customer = new Customer();
+                customer.setCusId(resultSet.getInt(1));
+                customer.setIdentity(resultSet.getString(2));
+                customer.setRealName(resultSet.getString(3));
+                customer.setWorkUnit(resultSet.getString(4));
+                customer.setVocation(resultSet.getString(5));
+                customer.setPhone(resultSet.getString(6));
+                customer.setSex(resultSet.getString(7));
+                return customer;
+            }
+        });
+    }
 }

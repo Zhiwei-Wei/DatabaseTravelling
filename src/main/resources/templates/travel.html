@@ -7,13 +7,19 @@
 </head>
 <body>
 <header th:replace="header::header"></header>
-<div class="travel_container main">
+<div class="travel_container main clearfix">
     <!--选择器-->
     <div class="travel_nav">
         <!--/*@thymesVar id="provinces" type="java.util.List<com.wzw.demo.vo.Province>"*/-->
         <div class="travel_nav_pr_ct">
             <label>目的地</label>
             <ul id="tr_dest" class="travel_selector">
+                <li th:name="d0_0">
+                    <a href="javascript:void(0);" onclick="ajax_getUrl(this,'dist')">
+                        <input type="hidden" th:name="id" th:value="0_0">
+                        不限
+                    </a>
+                </li>
                 <li th:name="'d'+${province.provinceId}+'_0'"
                     th:each="province, piterStat:${provinces}"
                     th:class="${#httpServletRequest.getParameter('dist')!=null && #httpServletRequest.getParameter('dist').split('_')[0] == province.provinceId+'' ? 'selected':''}">
@@ -39,6 +45,12 @@
             <label>出行日期</label>
             <ul class="travel_selector">
                 <!--/*@thymesVar id="months" type="java.util.List<Integer>"*/-->
+                <li>
+                    <a href="javascript:void(0);" onclick="ajax_getUrl(this,'month')">
+                        <input type="hidden" th:name="id" th:value="0">
+                        不限
+                    </a>
+                </li>
                 <li th:each="month:${months}"
                     th:class="${#httpServletRequest.getParameter('month') == month+'' ? 'selected':''}">
                     <a href="javascript:void(0);" onclick="ajax_getUrl(this,'month')"
@@ -52,6 +64,12 @@
         <div class="travel_nav_start">
             <label>出发地</label>
             <ul id="tr_arri" class="travel_selector">
+                <li th:name="a0_0">
+                    <a href="javascript:void(0);" onclick="ajax_getUrl(this,'arri')">
+                        <input type="hidden" th:name="id" th:value="0_0">
+                        不限
+                    </a>
+                </li>
                 <!--/*@thymesVar id="starts" type="java.util.List<com.wzw.demo.vo.Province>"*/-->
                 <li th:name="'a'+${start.provinceId}+'_0'" th:each="start:${starts}"
                     th:class="${#httpServletRequest.getParameter('arri')!=null&&#httpServletRequest.getParameter('arri').split('_')[0] == start.provinceId+'' ? 'selected':''}">
@@ -75,6 +93,12 @@
         <div class="travel_nav_days">
             <label>出行天数</label>
             <ul class="travel_selector">
+                <li>
+                    <a href="javascript:void(0);" onclick="ajax_getUrl(this,'day')">
+                        <input type="hidden" th:name="id" th:value="0_0">
+                        不限
+                    </a>
+                </li>
                 <li th:class="${#httpServletRequest.getParameter('day') == '1_1' ? 'selected':''}">
                     <a href="javascript:void(0);" onclick="ajax_getUrl(this,'day')">
                         <input type="hidden" th:name="id" th:value="1_1">
@@ -127,6 +151,11 @@
         <div class="travel_nav_service">
             <label>服务等级</label>
             <ul class="travel_selector">
+                <li>
+                    <a href="javascript:void(0);" onclick="ajax_getUrl(this,'service')" th:text="不限">
+                        <input type="hidden" th:name="id" th:value="'0'">
+                    </a>
+                </li>
                 <!--/*@thymesVar id="services" type="java.util.List<java.lang.String>"*/-->
                 <li th:each="service:${services}"
                     th:class="${#httpServletRequest.getParameter('service') == service ? 'selected':''}">
@@ -142,7 +171,7 @@
     <div class="travel_items">
         <div class="travel_items_holder">
             <div class="travel_items_order">
-                <li th:class="${#httpServletRequest.getParameter('orderby') != 'pop' ? '':'selected'}">
+                <li th:class="${#httpServletRequest.getParameter('orderby') == 'pop' or #httpServletRequest.getParameter('orderby')==null ? 'selected':''}">
                     <a href="javascript:void(0);" onclick="ajax_getUrl(this,'orderby')">
                         <input type="hidden" name="id" value="pop">
                         推荐
@@ -248,10 +277,13 @@
         ajax_getItems(0);
     }
     function ajax_getItems(dpage) {
-        var page = parseInt(getUrlParam("page"))+dpage;
+        var page = parseInt(getUrlParam("page"));
         var maxp = parseInt($('#rP').val());
         if(isNaN(page))
             page = 1;
+        if(isNaN(dpage))
+            dpage = 0;
+        page = page+dpage;
         if(isNaN(maxp)){
             maxp = parseInt($('#maxp').val());
         }
@@ -290,10 +322,10 @@
                     for(var i = 0; i < len; i++){
                         var obj = jsonlists[i];
                         $(node).append(
-                            "<li><img class='item_img' src='"+obj.picture+"'/><span" +
+                            "<li><div class='imgbox'><img class='item_img' src='https://imgs.qunarzz.com/vs_ceph_vs_tts/"+obj.picture+"'/></div><span" +
                             " class='item_title'>"+obj.tt+"</span><span class='item_intro'>"
                             +obj.introduction+"</span><input type='hidden' value='"+obj.routeId
-                            +"'><span class='item_price'>"+obj.price+"</span><span class='item_service" +
+                            +"'><span class='item_price'>"+parseInt(obj.price)+"</span><span class='item_service" +
                             "'>"+obj.service+"</span>"
                         );
                     }

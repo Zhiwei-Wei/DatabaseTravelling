@@ -48,6 +48,7 @@ public class CustomerGenerator {
             customer.setSex(str[0]);
             customer.setWorkUnit(s[0]);
             customer.setVocation(s[1]);
+            customers.add(customer);
         }
         return customers;
     }

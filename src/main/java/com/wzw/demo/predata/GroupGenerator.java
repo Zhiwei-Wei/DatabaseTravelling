@@ -28,10 +28,9 @@ public class GroupGenerator {
             group.setServiceLevel(service[rr%service.length]);
             group.setGuideId(rr%500+1);//500个导游
             group.setTransportation(trans[rr%trans.length]);
-            group.setPrice((rr%50+100)*group.getDays()*(rr%service.length+1)*0.6);//价格为服务等级*天数*0.6*随机数
-            group.setPictureUrl("https://imgs.qunarzz.com/vs_ceph_vs_tts/"+urls.get(rr%urls.size()));
+            group.setPictureUrl(urls.get(rr%urls.size()));
             group.setTitle(titles[rr%titles.length]);
-            group.setTitle(titles[rr%intros.length]);
+            group.setIntroduction(titles[rr%intros.length]);
             Calendar calendar = GroupGenerator.randomDateBetweenMinAndMax();//获取时间calendar
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");//转换成日期格式
             group.setStartTime(simpleDateFormat.format(calendar.getTime()));
@@ -41,6 +40,7 @@ public class GroupGenerator {
             group.setDays(days);
             group.setRouteId(rr%1000+1);//需要1000条旅游路线
             groups.add(group);
+            group.setPrice((rr%50+100)*group.getDays()*(rr%service.length+1)*0.6);//价格为服务等级*天数*0.6*随机数
         }
         return groups;
     }
@@ -65,6 +65,17 @@ public class GroupGenerator {
         //将double值舍入为整数，转化成long类型
         calendar.setTimeInMillis(Math.round(randomDate));
         return calendar;
+    }
+    public static String getIntro(){
+        String[] intros = new String[]{"豪华酒店，来就是赚到！","纯玩，0购物！","网红海景，网红美食"};
+        Random random = new Random();
+        return intros[random.nextInt(intros.length)];
+    }
+    public static double getPrice(Group group){
+        Random random = new Random();
+        int rr = random.nextInt(34097);
+        group.setPrice((rr%50+100)*group.getDays()*(rr%7+1)*0.6);//价格为服务等级*天数*0.6*随机数
+        return group.getPrice();
     }
 
 }
