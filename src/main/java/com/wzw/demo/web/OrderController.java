@@ -1,5 +1,8 @@
 package com.wzw.demo.web;
 
+import com.wzw.demo.repo.OrderRepository;
+import com.wzw.demo.vo.Order;
+import com.wzw.demo.vo.OrderInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,23 +11,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class OrderController {
     @Autowired
-    OrderController orderController;
-    @RequestMapping(value = "/myorder/{uid}", method = RequestMethod.GET)
-    public String myOrder(@PathVariable Integer uid, HttpServletRequest request, Model model){
+    OrderRepository orderRepository;
+    @RequestMapping(value = {"/myorder","/myorder/dqdd"}, method = RequestMethod.GET)
+    public String myOrderDq(HttpServletRequest request, Model model){
         Integer id = (Integer) request.getSession().getAttribute("uid");
         if(id==null){
-            model.addAttribute("msg","请登录！");//非自身用户
-            return "error.html";
-        }else if(id!=uid){
-            model.addAttribute("msg","不具有访问权限！");
-            return "error.html";
+            return "login.html";
         }else{
-
+            model.addAttribute("page","dqdd");
+            List<Order> orders = orderRepository.getCurOrders(id);
+            List<OrderInfo> orderInfos = orderRepository.getOrderInfos(orders);
+            model.addAttribute("status","进行中");
+            model.addAttribute("orderInfos",orderInfos);
         }
         return "order.html";
     }
+    @RequestMapping(value = {"/myorder/lsdd"}, method = RequestMethod.GET)
+    public String myOrderLs(HttpServletRequest request, Model model){
+        Integer id = (Integer) request.getSession().getAttribute("uid");
+        if(id==null){
+            return "login.html";
+        }else{
+            model.addAttribute("page","lsdd");
+            List<Order> orders = orderRepository.getHistoryOrders(id);
+            List<OrderInfo> orderInfos = orderRepository.getOrderInfos(orders);
+            model.addAttribute("status","已完成");
+            model.addAttribute("orderInfos",orderInfos);
+        }
+        return "order.html";
+    }
+
 }

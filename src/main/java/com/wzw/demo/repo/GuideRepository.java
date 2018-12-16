@@ -11,21 +11,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * 游客查找景点<br>
- * 公司管理景点
- */
 @Repository
-public class SpotRepository {
+public class GuideRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
-
-    public String getSpotNameBySpotId(Integer id){
-        List<String> strings = jdbcTemplate.query("select `name` from spot where spot_id = ?;"
-                , new PreparedStatementSetter() {
+    public String getGuideNameByGuideId(Integer id){
+        List<String> strings = jdbcTemplate.query("select e.name from employee e inner join guide " +
+                        "g on e.employee_id = g.employee_id where g.guide_id=?;",
+                new PreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement preparedStatement) throws SQLException {
-                        preparedStatement.setInt(1,id);
+                        preparedStatement.setInt(1, id);
                     }
                 }, new RowMapper<String>() {
                     @Override
@@ -33,6 +29,6 @@ public class SpotRepository {
                         return resultSet.getString(1);
                     }
                 });
-        return strings.size()>0?strings.get(0):"ERROR";
+        return strings.size()>0?strings.get(0):null;
     }
 }

@@ -6,6 +6,16 @@ public class Customer {
     private String workUnit;
     private String vocation;
     private String phone;
+    private String sex;
+    private String identity;
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
 
     public Integer getCusId() {
         return cusId;
@@ -54,6 +64,4 @@ public class Customer {
     public void setIdentity(String identity) {
         this.identity = identity;
     }
-
-    private String identity;
 }

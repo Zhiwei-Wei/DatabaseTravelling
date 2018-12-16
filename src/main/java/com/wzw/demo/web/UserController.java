@@ -110,4 +110,8 @@ public class UserController {
         request.getSession().removeAttribute("nickname");
         return "index.html";
     }
+    @RequestMapping(value = "/profile", method = RequestMethod.GET)
+    public String profile(){
+        return "notdone.html";
+    }
 }

@@ -7,7 +7,7 @@
 </head>
 <body>
 <header th:replace="header::header"></header>
-<div class="travel_container">
+<div class="travel_container main">
     <!--选择器-->
     <div class="travel_nav">
         <!--/*@thymesVar id="provinces" type="java.util.List<com.wzw.demo.vo.Province>"*/-->
@@ -24,7 +24,7 @@
                     <ul class="travel_cities">
                         <li th:name="'d'+${province.provinceId}+'_'+${city.cityId}"
                             th:each="city, citerStat:${province.cities}"
-                            th:class="${#httpServletRequest.getParameter('dist')!=null&&#httpServletRequest.getParameter('arri').split('_')[0] == province.provinceId+'' && #httpServletRequest.getParameter('dist').split('_')[1] == city.cityId+'' ? 'selected':''}">
+                            th:class="${#httpServletRequest.getParameter('dist')!=null&&#httpServletRequest.getParameter('dist').split('_')[0] == province.provinceId+'' && #httpServletRequest.getParameter('dist').split('_')[1] == city.cityId+'' ? 'selected':''}">
                             <a href="javascript:void(0);" onclick="ajax_getUrl(this,'dist')">
                                 <span th:text="${city.name}"></span>
                                 <input type="hidden" name="id" th:value="${province.provinceId}+'_'+${city.cityId}">
@@ -189,13 +189,17 @@
     function tjPrice() {
         var min_pr = parseInt($('#low_pr').val());
         var max_pr = parseInt($('#high_pr').val());
+        if(isNaN(min_pr)||!$.isNumeric(min_pr))
+            min_pr = 0;
+        if(isNaN(max_pr)||!$.isNumeric(max_pr))
+            max_pr = 0;
         if(min_pr>max_pr){
             alert("错误价格区间！");
             return;
         }
-        if(min_pr>0)
+        if(min_pr>=0)
             changeURLArg("min_pr",min_pr);
-        if(max_pr>0)
+        if(max_pr>=0)
             changeURLArg("max_pr",max_pr);
         ajax_getItems(0);
     }
@@ -286,7 +290,7 @@
                     for(var i = 0; i < len; i++){
                         var obj = jsonlists[i];
                         $(node).append(
-                            "<li><img class='item_img' src='/images/"+obj.picture+"'/><span" +
+                            "<li><img class='item_img' src='"+obj.picture+"'/><span" +
                             " class='item_title'>"+obj.tt+"</span><span class='item_intro'>"
                             +obj.introduction+"</span><input type='hidden' value='"+obj.routeId
                             +"'><span class='item_price'>"+obj.price+"</span><span class='item_service" +

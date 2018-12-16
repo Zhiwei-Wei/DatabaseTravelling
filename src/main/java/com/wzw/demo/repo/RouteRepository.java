@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -38,6 +39,8 @@ public class RouteRepository {
     public static final int PAGESIZE = 30;
     @Autowired
     JdbcTemplate jdbcTemplate;
+    @Autowired
+    SpotRepository spotRepository;
     public Object[] getTravelItems(String orderby, int page, int dist_province, int dist_city,
                                            int arri_province, int arri_city, int min_day, int max_day,
                                            int min_price, int max_price, int month, String service){
@@ -167,4 +170,35 @@ public class RouteRepository {
         return objects;
     }
 
+    /**
+     * 返回空格相隔的路线表
+     * @param id
+     * @return
+     */
+    public String getRouteByRouteId(Integer id){
+        List<Integer> integers = jdbcTemplate.query("select spot_id from route_spot_takes" +
+                " where route_id=? order by `order`;", new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                preparedStatement.setInt(1, id);
+            }
+        }, new RowMapper<Integer>() {
+            @Override
+            public Integer mapRow(ResultSet resultSet, int i) throws SQLException {
+                return resultSet.getInt(1);
+            }
+        });
+        HashMap<Integer, String> spot = new HashMap<>();
+        StringBuilder route = new StringBuilder();
+        for(Integer i:integers){
+            if(spot.containsKey(i)){
+                route.append(spot.get(i)+" ");
+            }else{
+                String spotName = spotRepository.getSpotNameBySpotId(i);
+                spot.put(i,spotName);
+                route.append(spotName+" ");
+            }
+        }
+        return route.toString().trim();
+    }
 }

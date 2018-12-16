@@ -8,7 +8,19 @@
 <body>
 <header th:replace="header::header"></header>
 
+<div class="main">
+    <div class="od_bar">
+        <ul class="od_bar_group">
+            <li th:class="${page=='dqdd'?'od_sb_ptr_cur':'od_sb_ptr'}">当前订单</li>
+            <li th:class="${page=='lsdd'?'od_sb_ptr_cur':'od_sb_ptr'}">历史订单</li>
+        </ul>
+    </div>
+    <div>
+        <ul id="od_item_list">
 
+        </ul>
+    </div>
+</div>
 
 <footer th:replace="footer::footer"></footer>
 </body>
