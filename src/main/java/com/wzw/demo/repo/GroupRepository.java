@@ -3,12 +3,15 @@ package com.wzw.demo.repo;
 import com.wzw.demo.vo.Group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,14 +20,18 @@ import java.util.List;
 @Repository
 public class GroupRepository {
     @Autowired
+    RouteRepository routeRepository;
+    @Autowired
     JdbcTemplate jdbcTemplate;
     /**
      * 获得旅游团旅行时间<br>
      * @return
      */
     public List<Integer> getMonths(){
-
-        return null;
+        List<Integer> integers = new ArrayList<>();
+        for(int i = 1; i <= 12; i++)
+            integers.add(i);
+        return integers;
     }
 
     /**
@@ -32,8 +39,15 @@ public class GroupRepository {
      * @return
      */
     public List<String> getServices(){
-
-        return null;
+        List<String> strings = new ArrayList<>();
+        strings.add("D");
+        strings.add("C");
+        strings.add("B");
+        strings.add("A");
+        strings.add("S");
+        strings.add("SS");
+        strings.add("SSS");
+        return strings;
     }
 
     /**
@@ -42,7 +56,35 @@ public class GroupRepository {
      * @return
      */
     public Group getGroupInfoByGroupId(Integer groupId){
-        return null;
+        List<Group> groups = jdbcTemplate.query("select * from `group` where group_id = ? and acitivated='1';",
+                new PreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                        preparedStatement.setInt(1, groupId);
+                    }
+                }, new RowMapper<Group>() {
+                    @Override
+                    public Group mapRow(ResultSet resultSet, int i) throws SQLException {
+                        Group group = new Group();
+                        group.setGroupId(resultSet.getInt(1));
+                        group.setGuideId(resultSet.getInt(2));
+                        group.setCurCusNumber(resultSet.getInt(3));
+                        group.setMaxCusNumber(resultSet.getInt(4));
+                        group.setStartTime(resultSet.getString(5));
+                        group.setEndTime(resultSet.getString(6));
+                        group.setDays(resultSet.getInt(7));
+                        group.setTransportation(resultSet.getString(8));
+                        group.setServiceLevel(resultSet.getString(9));
+                        group.setPrice(resultSet.getDouble(10));
+                        group.setRouteId(resultSet.getInt(11));
+                        group.setPictureUrl(resultSet.getString(12));
+                        group.setTitle(resultSet.getString(13));
+                        group.setIntroduction(resultSet.getString(14));
+                        group.setRoute(routeRepository.getRouteByRouteId(group.getRouteId()));
+                        return group;
+                    }
+                });
+        return groups.get(0);
     }
 
     /**
@@ -50,7 +92,6 @@ public class GroupRepository {
      * @return
      */
     public List<Group> getAllGroups(){
-        SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         List<Group> groups = jdbcTemplate.query("select * from `group`;", new RowMapper<Group>() {
             @Override
             public Group mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -59,8 +100,8 @@ public class GroupRepository {
                 group.setGuideId(resultSet.getInt(2));
 //                group.setCurCusNumber(resultSet.getInt(3));
                 group.setMaxCusNumber(resultSet.getInt(4));
-                group.setStartTime(fm.format(resultSet.getDate(5)));
-                group.setEndTime(fm.format(resultSet.getDate(6)));
+                group.setStartTime(resultSet.getString(5));
+                group.setEndTime(resultSet.getString(6));
                 group.setDays(resultSet.getInt(7));
                 group.setTransportation(resultSet.getString(8));
                 group.setServiceLevel(resultSet.getString(9));
@@ -74,4 +115,13 @@ public class GroupRepository {
         });
         return groups;
     }
+    /**
+     * 添加用户购买的数据
+     */
+    public boolean JoinGroup(Integer uid, Integer gid){
+        boolean flag = false;
+
+        return flag;
+    }
+
 }

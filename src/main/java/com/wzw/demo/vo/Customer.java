@@ -9,6 +9,11 @@ public class Customer {
     private String sex;
     private String identity;
 
+    @Override
+    public String toString() {
+        return "姓名："+realName+"电话："+phone;
+    }
+
     public String getSex() {
         return sex;
     }

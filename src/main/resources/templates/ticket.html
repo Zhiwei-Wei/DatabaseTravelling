@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>购票</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/layout.css}">
+</head>
+<body>
+<header th:replace="header::header"></header>
+<div class="main tk_container">
+    <form th:action="@{/buyIt}" method="post" id="input_form">
+    <div class="group_card">
+        <!--/*@thymesVar id="group" type="com.wzw.demo.vo.Group"*/-->
+        <div class='imgbox'>
+            <img class='item_img' th:src="'https://imgs.qunarzz.com/vs_ceph_vs_tts/'+${group.pictureUrl}"/>
+        </div>
+        <div class='wrapper'>
+            <span class='item_title' th:text="${group.title}"></span>
+            <span class='item_intro' th:text="${group.introduction}"></span>
+            <input type='hidden' name='routeId' th:value='${group.routeId}'>
+            <input type="hidden" name="groupId" th:value="${group.groupId}">
+            <hr>
+            <span class='item_price' th:text="${#numbers.formatCurrency(group.price)}"></span>
+            <span class='item_days' th:text="${group.days}+'天'"></span>
+            <span class='item_curNum' th:text="'人数：'+${group.curCusNumber}"></span>/
+            <span class='item_maxNum' th:text="${group.maxCusNumber}"></span>
+            <span class='item_startTime' th:text="'开始时间：'+${group.startTime}"></span>
+            <span class='item_startTime' th:text="'结束时间：'+${group.endTime}"></span>
+            <span class='item_startTime' th:text="'交通方式：'+${group.transportation}"></span>
+            <span class='item_startTime' th:text="'旅游路线：'+${group.route}"></span>
+            <span class='item_service' th:text="${group.serviceLevel}"></span>
+        </div>
+    </div>
+    <div class="input_group">
+        <input class="input_text" size="15" maxlength="13" type="text" placeholder="姓    名" name="realName">
+        <input class="input_text" size="15" maxlength="13" type="text" placeholder="手 机 号" oninput = "checkNum(this)" name="phone">
+        <input class="input_text" size="20" maxlength="19" type="text" placeholder="身 份 证" oninput = "checkNum(this)" name="identity">
+        <input class="input_text" size="15" maxlength="13" type="text" placeholder="工作单位" name="workUnit">
+        <input class="input_text" size="15" maxlength="13" type="text" placeholder="工    作" name="vocation">
+        <input type="radio" th:text="男" checked name="sex">
+        <input type="radio" th:text="女" name="sex">
+    </div>
+    <input id="cus_num" name="cus_num" value="1" type="hidden">
+    <button onclick="addnew();return false;" class="btn-add">+</button>
+    <input class="btn-default" type="submit" th:value="提交">
+</form>
+</div>
+<footer th:replace="footer::footer"></footer>
+<script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+<script>
+    function addnew() {
+        if(isNaN($('#cus_num').val())||$('#cus_num').val()=='')
+            $('#cus_num').val(1);
+        $('#cus_num').val(parseInt($('#cus_num').val())+1);
+        var node = $('#input_form').children("div");
+        var div = node.get(node.length-1);
+        var clone = $(div).clone(true);
+        var children = clone.children("input");
+        var cnt = parseInt($('#cus_num').val())-1;
+        for(var i=0; i < children.length; i++ ){
+            var val = children[i];
+            if($(val).attr("name")!=null){
+                $(val).attr('name',$(val).attr('name').split("_")[0]+"_"+cnt);
+            }
+        }
+        $(div).after(clone);
+    }
+
+    function checkNum(node) {
+        $(node).val($(node).val().replace(/[^\d]/g,''));
+    }
+</script>
+</body>
+</html>

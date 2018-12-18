@@ -4,7 +4,15 @@ public class Group {
     private int groupId,guideId,curCusNumber,maxCusNumber,days,routeId;
     private String startTime,endTime,transportation,serviceLevel,pictureUrl,title,introduction;
     private Double price;
-    private String activated;
+    private String activated,route;
+
+    public String getRoute() {
+        return route;
+    }
+
+    public void setRoute(String route) {
+        this.route = route;
+    }
 
     public int getGroupId() {
         return groupId;

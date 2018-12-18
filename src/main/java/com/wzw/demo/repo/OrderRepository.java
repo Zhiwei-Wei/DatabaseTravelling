@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,19 +28,70 @@ public class OrderRepository {
     GuideRepository guideRepository;
     @Autowired
     RouteRepository routeRepository;
+    @Autowired
+    ContractRepository contractRepository;
+    @Autowired
+    CustomerRepository customerRepository;
 
+    public static final Integer PAGESIZE=30;
+
+    /**
+     * 根据用户ID返回最大页数
+     */
+    public Integer getCurMaxPage(Integer id){
+        List<Integer> integers = jdbcTemplate.query("select count(*) from group_cus_takes gg" +
+                        " inner join `group` g on g.group_id=gg.group_id inner join contract c on " +
+                        " c.group_id = gg.group_id and c.cus_id = gg.cus_id where gg.uid=? and g.acitivated=?",
+                new PreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                        preparedStatement.setInt(1,id);
+                        preparedStatement.setString(2,"1");
+                    }
+                }, new RowMapper<Integer>() {
+                    @Override
+                    public Integer mapRow(ResultSet resultSet, int i) throws SQLException {
+                        return resultSet.getInt(1);
+                    }
+                });
+        return integers.size()>0? integers.get(0)/30+1:1;
+    }
+
+    public Integer getHistoryMaxPage(Integer id){
+        List<Integer> integers = jdbcTemplate.query("select count(*) from group_cus_takes gg" +
+                        " inner join `group` g on g.group_id=gg.group_id inner join contract c on " +
+                        " c.group_id = gg.group_id and c.cus_id = gg.cus_id where gg.uid=? and g.acitivated=?",
+                new PreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                        preparedStatement.setInt(1,id);
+                        preparedStatement.setString(2,"0");
+                    }
+                }, new RowMapper<Integer>() {
+                    @Override
+                    public Integer mapRow(ResultSet resultSet, int i) throws SQLException {
+                        return resultSet.getInt(1);
+                    }
+                });
+        return integers.size()>0? integers.get(0)/30+1:1;
+    }
     /**
      * 根据用户id获取进行中的订单信息
      * @param id
      * @return
      */
-    public List<Order> getCurOrders(Integer id){//uid应该等于cus_id
+    public List<Order> getCurOrders(Integer id, int page){//uid不等于cus_id
+        int start = (page-1)*PAGESIZE;
         return jdbcTemplate.query("select gg.group_id,gg.cus_id from group_cus_takes gg" +
-                        " inner join `group` g on g.group_id=gg.group_id where cus_id=? and g.acitivated='1';",
+                        " inner join `group` g on g.group_id=gg.group_id inner join contract c on " +
+                        " c.group_id = gg.group_id and c.cus_id = gg.cus_id where gg.uid=? and g.acitivated='1'" +
+                        " order by c.date desc limit ?,?;",
                 new PreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement preparedStatement) throws SQLException {
                         preparedStatement.setInt(1,id);
+                        preparedStatement.setInt(2,start);
+                        preparedStatement.setInt(3,PAGESIZE);
                     }
                 }, new RowMapper<Order>() {
                     @Override
@@ -66,9 +118,10 @@ public class OrderRepository {
                     orderInfo.setGuideId(resultSet.getInt(2)+"");
                     orderInfo.setRouteId(resultSet.getInt(3)+"");
                     orderInfo.setPrice(resultSet.getDouble(4)+"");
-                    orderInfo.setStartTime(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(resultSet.getDate(5)));
-                    orderInfo.setEndTime(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(resultSet.getDate(6)));
+                    orderInfo.setStartTime(resultSet.getString(5));
+                    orderInfo.setEndTime(resultSet.getString(6));
                     orderInfo.setGroupTitle(resultSet.getString(7));
+                    orderInfo.setCusId(order.getCusId()+"");
                     return orderInfo;
                 }
             }).get(0));
@@ -92,7 +145,17 @@ public class OrderRepository {
                 route.put(routeId,routeName);
                 orderInfo.setRoute(routeName);
             }
+            int contractId = contractRepository.getContractIdByGroupIdAndCusId(Integer.parseInt(orderInfo.getGroupId()),
+                    Integer.parseInt(orderInfo.getCusId()));
+            orderInfo.setOrderDate(contractRepository.getDateByContractId(contractId));
+            orderInfo.setCusName(customerRepository.getCustomerNameById(Integer.parseInt(orderInfo.getCusId())));
         }
+        orderInfos.sort(new Comparator<OrderInfo>() {
+            @Override
+            public int compare(OrderInfo o1, OrderInfo o2) {
+                return o2.getOrderDate().compareTo(o1.getOrderDate());
+            }
+        });
         return orderInfos;
     }
     /**
@@ -100,13 +163,18 @@ public class OrderRepository {
      * @param id
      * @return
      */
-    public List<Order> getHistoryOrders(Integer id){
+    public List<Order> getHistoryOrders(Integer id, int page){
+        int start = (page-1)*PAGESIZE;
         return jdbcTemplate.query("select gg.group_id,gg.cus_id from group_cus_takes gg" +
-                        " inner join `group` g on g.group_id=gg.group_id where cus_id=? and g.acitivated='0';",
+                        " inner join `group` g on g.group_id=gg.group_id inner join contract c on " +
+                        " c.group_id = gg.group_id and c.cus_id = gg.cus_id where gg.uid=? and g.acitivated='0'" +
+                        " order by c.date desc limit ?,?;",
                 new PreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement preparedStatement) throws SQLException {
                         preparedStatement.setInt(1,id);
+                        preparedStatement.setInt(2,start);
+                        preparedStatement.setInt(3,PAGESIZE);
                     }
                 }, new RowMapper<Order>() {
                     @Override
@@ -119,7 +187,7 @@ public class OrderRepository {
     private Order getOrder(ResultSet resultSet) throws SQLException {
         Order order = new Order();
         order.setGroupId(resultSet.getInt(1));
-        order.setUserId(resultSet.getInt(2));
+        order.setCusId(resultSet.getInt(2));
         return order;
     }
 }

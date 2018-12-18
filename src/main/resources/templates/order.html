@@ -11,17 +11,118 @@
 <div class="main">
     <div class="od_bar">
         <ul class="od_bar_group">
-            <li th:class="${page=='dqdd'?'od_sb_ptr_cur':'od_sb_ptr'}">当前订单</li>
-            <li th:class="${page=='lsdd'?'od_sb_ptr_cur':'od_sb_ptr'}">历史订单</li>
+            <li th:class="${page=='dqdd'?'od_sb_ptr_cur':'od_sb_ptr'}"><a th:href="@{/myorder/dqdd}">当前订单</a></li>
+            <li th:class="${page=='lsdd'?'od_sb_ptr_cur':'od_sb_ptr'}"><a th:href="@{/myorder/lsdd}">历史订单</a></li>
         </ul>
     </div>
-    <div>
+    <div class="od_items">
         <ul id="od_item_list">
-
+            <!--/*@thymesVar id="status" type="java.lang.String"*/-->
+            <!--/*@thymesVar id="orderInfos" type="java.util.List<com.wzw.demo.vo.OrderInfo>"*/-->
+            <li th:each="orderInfo:${orderInfos}">
+                <div class="od_item">
+                    <span class="od_title" th:text="${orderInfo.groupTitle}" th:value="${orderInfo.groupId}"></span>
+                    <span class="od_cus" th:text="${orderInfo.cusName}" th:value="${orderInfo.cusId}"></span>
+                    <span class="od_price" th:text="${#numbers.formatCurrency(orderInfo.price)}"></span>
+                    <span class="od_route" th:text="${orderInfo.route}" th:value="${orderInfo.routeId}"></span>
+                    <span class="od_st_time" th:text="${orderInfo.startTime}"></span>
+                    <span class="od_ed_time" th:text="${orderInfo.endTime}"></span>
+                    <span class="od_guide" th:text="${orderInfo.guideName}" th:value="${orderInfo.guideId}"></span>
+                    <span class="od_time" th:text="${orderInfo.orderDate}"></span>
+                    <span class="od_tag" th:text="${status}"></span>
+                </div>
+            </li>
         </ul>
+        <input id="od_status" type="hidden" th:value="${status}">
+    </div>
+    <div class="od_page">
+        <span id="lP" th:text="1"></span>/
+        <span id="rP" th:text="${maxPage}"></span>
+        <button id="pre" class="btn-default" onclick="ajax_getItems(-1)" disabled="disabled">上一页</button>
+        <button id="nxt" class="btn-default" onclick="ajax_getItems(1)" th:disabled="${maxPage==1?'disabled':'false'}">下一页</button>
     </div>
 </div>
 
 <footer th:replace="footer::footer"></footer>
+<script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+<script>
+    function ajax_getItems(dpage) {
+        var page = parseInt($('#lP').html());
+        var maxp = parseInt($('#rP').html());
+        if(isNaN(page))
+            page = 1;
+        if(isNaN(dpage))
+            dpage = 0;
+        page = page+dpage;
+        if(isNaN(maxp)){
+            maxp = parseInt($('#maxp').val());
+        }
+        if(page>maxp) {
+            alert("超过最大数目！");
+            return false;
+        }
+        if(page<1) {
+            alert("页码错误！");
+            return false;
+        }
+        $('#lP').html(page);
+        $('#pre').attr("disabled",false);
+        $('#nxt').attr("disabled",false);
+        if(page==1){
+            $('#pre').attr("disabled",true);
+        }
+        if(page==maxp){
+            $('#nxt').attr("disabled",true);
+        }
+        $.ajax(
+            {
+                type:"GET",
+                url:"getOrders?page="+page+"&status="+$("#od_status").val(),
+                dataType:"json",
+                success:function (data) {
+                    $("html,body").animate({scrollTop:0}, 500);
+                    var jsonlists = $.parseJSON(data.data);
+                    var len = jsonlists.length;
+                    var node = $("#od_item_list");
+                    $(node).empty();
+                    for(var i = 0; i < len; i++){
+                        var obj = jsonlists[i];
+                        $(node).append(
+                            "<div class=\"od_item\">" +
+                            "                    <span class=\"od_title\" value='"+obj.groupId+"'>"+obj.groupTitle+"</span>" +
+                            "                    <span class=\"od_cus\"   value='"+obj.cusId+"'>"+obj.cusName+"</span>" +
+                            "                    <span class=\"od_price\" >￥"+toPrice(obj.price)+"</span>" +
+                            "                    <span class=\"od_route\" value='"+obj.routeId+"'>"+obj.route+"</span>" +
+                            "                    <span class=\"od_st_time\" >"+obj.startTime+"</span>" +
+                            "                    <span class=\"od_ed_time\" >"+obj.endTime+"</span>" +
+                            "                    <span class=\"od_guide\"   value='"+obj.guideId+"'>"+obj.guideName+"</span>" +
+                            "                    <span class=\"od_time\" >"+obj.orderDate+"</span>" +
+                            "                    <span class=\"od_tag\"  >"+$("#od_status").val()+"</span>" +
+                            "                </div>"
+                        );
+                    }
+                },
+                error:function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("错误码："+XMLHttpRequest.status);
+                }
+            }
+        )
+    }
+    function toPrice(price) {
+        var test = price.split("\.")[0];
+        var i = test.length%3 > 0 ? Math.floor((test.length/3)) : (test.length/3)-1;
+        var a  = test.split("");
+        for (var x = 1; x<i+1; x++) {
+            a.splice(-3*x-x+1, 0, ",");
+        };
+        var b = ".00";
+        if(price.split("\.").length>1){
+            b = "."+price.split("\.")[1].substring(0,2);
+            if(b.length==2)
+                b = b+"0";
+        }
+        return a.join("")+b;
+    }
+</script>
 </body>
 </html>

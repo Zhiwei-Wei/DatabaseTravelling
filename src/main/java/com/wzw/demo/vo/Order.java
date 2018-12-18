@@ -1,7 +1,7 @@
 package com.wzw.demo.vo;
 
 public class Order {
-    private Integer groupId,userId;//status为 已完成 进行中 这两种
+    private Integer groupId,cusId;//status为 已完成 进行中 这两种
 
     public Integer getGroupId() {
         return groupId;
@@ -11,13 +11,11 @@ public class Order {
         this.groupId = groupId;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getCusId() {
+        return cusId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setCusId(Integer cusId) {
+        this.cusId = cusId;
     }
-
-
 }

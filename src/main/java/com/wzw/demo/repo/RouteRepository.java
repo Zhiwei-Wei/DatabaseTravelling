@@ -59,7 +59,6 @@ public class RouteRepository {
             }
         }
         final String order = tmp+",g.group_id asc ";
-        System.out.println(order);
         int a = (page-1)*PAGESIZE;
         //使用jdbcTemplate进行参数填充的order by为乱序，无用
         List<TravelItem> travelItems = jdbcTemplate.query(
@@ -73,7 +72,7 @@ public class RouteRepository {
                         " start_time > ? and (? = 0 or days_number >= ?) and" +
                         " (? = 0 or days_number <= ?) and (?=0 or price >= ?) and " +
                         "(?=0 or price <= ?) and (?=0 or month(start_time)=?) and " +
-                        "(? = '0' or service_level = ?) and g.acitivated='1' order by "+order+" limit ?,?;", new PreparedStatementSetter() {
+                        "(? = '0' or service_level = ?) and g.acitivated='1' and g.cus_cur_num < g.cus_max_num order by "+order+" limit ?,?;", new PreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement preparedStatement) throws SQLException {
                         preparedStatement.setInt(1, arri_province);
@@ -116,8 +115,7 @@ public class RouteRepository {
                         travelItem.setCurNum(resultSet.getInt(7)+"");
                         travelItem.setMaxNum(resultSet.getInt(8)+"");
                         travelItem.setDays(resultSet.getInt(9)+"");
-                        travelItem.setStartTime(new SimpleDateFormat("yyyy-MM-dd HH:mm")
-                                .format(resultSet.getDate(10)));
+                        travelItem.setStartTime(resultSet.getString(10));
                         travelItem.setService(resultSet.getString(11));
                         travelItem.setIntroduction(resultSet.getString(12));
                         return travelItem;

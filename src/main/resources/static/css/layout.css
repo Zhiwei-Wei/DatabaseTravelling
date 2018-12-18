@@ -94,7 +94,6 @@ html{
 }
 body{
     min-height:100%;margin:0;padding:0;position:relative;
-    font-size:0.9em;
 }
 footer{
     margin-top: 10px;
@@ -126,8 +125,9 @@ header.over{
     margin-top: 0px;
     width:100%;
     height:auto;
-    box-shadow: 3px 3px 2px #333333;
-    z-index: 100;
+    box-shadow: 0 5px 15px #777;
+    z-index: 100;background: #fff;
+    background: -webkit-linear-gradient(rgba(200,200,200,0.8),rgba(255,255,255,1));
 }
 .travel_container{
     margin:0px 10%;
@@ -396,7 +396,7 @@ header_mnav li.header_ptr_cur:hover{
 .travel_items_list li{
     display:inline-block;
     width:300px;
-    height:365px;
+    height:420px;
     margin-left:20px;
     margin-top:20px;
     float:left;
@@ -405,5 +405,113 @@ header_mnav li.header_ptr_cur:hover{
 .travel_items_list li:hover{
     box-shadow:0 0 15px #222;
     color:orange;
-    transition:all 0.1s ease 0.1s;
+    transition:all 0.1s ease-out 0.1s;
+}
+.travel_items_list li:hover .item_service{
+    background:#6da2d0;
+    border:aliceblue;
+    color: white;
+}
+.item_title{
+    font-size:x-large;
+    font-weight:bolder;
+    display:block;
+}
+.item_intro{
+    display:block;
+}
+.item_price{
+    display:block;
+    color:orange;
+    font-size:1.5em;
+}
+.item_service{
+    border:1px solid #6da2d0;
+    border-radius:20px;
+    width:50px;
+    color:white;
+    background:#0c599c;
+    box-shadow:0 0 3px aliceblue inset;
+    text-align:center;
+    display:block;
+}
+.wrapper{
+    padding:20px;
+    font-size:14px;
+}
+.item_days{
+    display:block;
+}
+.item_startTime{
+    display:block;
+}
+.btn-add{
+    color: #fff;
+    background: #00b4ef;
+    border-radius: 50%;
+    border: none;
+    text-transform: capitalize;
+    transition: all 0.5s ease 0s;
+}
+.btn-add:hover{
+    background: #0F5CEF;
+}
+.btn-add:active{
+    background: #0300EF;
+    box-shadow: 2px 2px 1px #333333 inset;
+    color:#ddd;
+}
+.input_text{
+    border-radius:20px;
+    height:30px;
+    text-align:center;
+    opacity:0.6;
+}
+.input_text:focus{
+    opacity:0.9;
+    box-shadow:0 0 5px #333 inset;
+}
+input::-ms-input-placeholder{
+    text-align: center;
+}
+input::-webkit-input-placeholder{
+    text-align: center;
+}
+input.form-control::-ms-input-placeholder{
+    text-align: left;
+}
+input.form-control::-webkit-input-placeholder{
+    text-align: left;
+}
+.input_group{
+    display: inline-block;
+    background: -webkit-linear-gradient(rgba(223, 222, 234, 0.8),rgb(200, 244, 255));
+    opacity:0.9;
+    padding:10px 30px;
+    border-radius:100px;
+    color:#1d3e6f;
+}
+.input_group{
+    margin:10px 20px;
+}
+.tk_container{
+    left:10%;
+    right:10%;
+    position:relative;
+    max-width:1000px;
+}
+
+.group_card{
+    display:inline-block;
+    width:300px;
+    height:auto;
+    margin-left:20px;
+    margin-top:20px;
+    float:left;
+    box-shadow:0 0 4px #444;
+}
+.group_card:hover{
+    box-shadow:0 0 15px #222;
+    color:orange;
+    transition:all 0.1s ease-out 0.1s;
 }

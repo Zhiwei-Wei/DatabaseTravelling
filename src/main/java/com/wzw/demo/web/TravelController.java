@@ -1,9 +1,12 @@
 package com.wzw.demo.web;
 
 import com.alibaba.fastjson.JSON;
+import com.wzw.demo.repo.CustomerRepository;
 import com.wzw.demo.repo.GroupRepository;
 import com.wzw.demo.repo.ProvinceCityRepository;
 import com.wzw.demo.repo.RouteRepository;
+import com.wzw.demo.vo.Customer;
+import com.wzw.demo.vo.Group;
 import com.wzw.demo.vo.Province;
 import com.wzw.demo.vo.TravelItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.*;
 
 @Controller
 public class TravelController {
@@ -26,6 +29,8 @@ public class TravelController {
     RouteRepository routeRepository;
     @Autowired
     ProvinceCityRepository provinceCityRepository;
+    @Autowired
+    CustomerRepository customerRepository;
     @RequestMapping(value = "/travel", method = RequestMethod.GET)
     public String travel(Model model, HttpServletRequest request){
 //        List<Province> provinces = groupRepository.getDistinations();
@@ -99,5 +104,48 @@ public class TravelController {
         map.put("travelItems",travellists);
         String s = JSON.toJSONString(map);
         return s;
+    }
+
+    @RequestMapping(value = "/buyIt", method = RequestMethod.GET)
+    public String buyIt(HttpServletRequest request, Model model){
+        Integer id = (Integer) request.getSession().getAttribute("uid");
+        if(id==null){
+            return "login.html";
+        }
+        Integer gid = Integer.parseInt(request.getParameter("gid"));
+        if(gid==null){
+            return "index.html";
+        }
+        Group group = groupRepository.getGroupInfoByGroupId(gid);
+        model.addAttribute("group", group);
+        return "ticket.html";
+    }
+
+    @RequestMapping(value = "/buyIt", method = RequestMethod.POST)
+    public String order(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        int size = Integer.parseInt(request.getParameter("cus_num"));
+        int gid = Integer.parseInt(request.getParameter("groupId"));
+        List<Customer> customers = new ArrayList<>();
+        Customer customer = new Customer();
+        customer.setSex(request.getParameter("sex"));
+        customer.setPhone(request.getParameter("phone"));
+        customer.setVocation(request.getParameter("vocation"));
+        customer.setIdentity(request.getParameter("identity"));
+        customer.setWorkUnit(request.getParameter("workUnit"));
+        customer.setRealName(request.getParameter("realName"));
+        customers.add(customer);
+        for(int i = 1; i <= size-1; i++){
+            customer = new Customer();
+            customer.setRealName(request.getParameter("realName_"+i));
+            customer.setSex(request.getParameter("sex_"+i));
+            customer.setPhone(request.getParameter("phone_"+i));
+            customer.setVocation(request.getParameter("vocation_"+i));
+            customer.setIdentity(request.getParameter("identity_"+i));
+            customer.setWorkUnit(request.getParameter("workUnit_"+i));
+            customers.add(customer);
+        }
+        customerRepository.joinCustomersIntoGroup(gid, customers);
+        response.sendRedirect("/myorder");
+        return "/index.html";
     }
 }

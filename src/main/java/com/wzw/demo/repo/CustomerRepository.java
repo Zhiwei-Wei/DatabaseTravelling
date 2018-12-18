@@ -3,9 +3,11 @@ package com.wzw.demo.repo;
 import com.wzw.demo.vo.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -33,5 +35,25 @@ public class CustomerRepository {
                 return customer;
             }
         });
+    }
+
+    public String getCustomerNameById(Integer id){
+        List<String> integers = jdbcTemplate.query("select real_name from customer where cus_id=?",
+                new PreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                        preparedStatement.setInt(1, id);
+                    }
+                }, new RowMapper<String>() {
+                    @Override
+                    public String mapRow(ResultSet resultSet, int i) throws SQLException {
+                        return resultSet.getString(1);
+                    }
+                });
+        return integers.size()>0?integers.get(0):null;
+    }
+
+    public void joinCustomersIntoGroup(Integer groupId, List<Customer> customers){
+
     }
 }

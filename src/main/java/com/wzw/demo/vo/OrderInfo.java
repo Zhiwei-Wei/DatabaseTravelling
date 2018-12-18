@@ -5,7 +5,31 @@ package com.wzw.demo.vo;
  */
 public class OrderInfo {
     private String groupTitle,price,groupId,route,startTime,endTime,guideName,guideId,routeId;
+    private String orderDate,cusId,cusName;
 
+    public String getCusName() {
+        return cusName;
+    }
+
+    public void setCusName(String cusName) {
+        this.cusName = cusName;
+    }
+
+    public String getCusId() {
+        return cusId;
+    }
+
+    public void setCusId(String cusId) {
+        this.cusId = cusId;
+    }
+
+    public String getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(String orderDate) {
+        this.orderDate = orderDate;
+    }
 
     public String getRouteId() {
         return routeId;
