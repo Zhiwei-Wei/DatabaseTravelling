@@ -485,7 +485,7 @@ input.form-control::-webkit-input-placeholder{
 }
 .input_group{
     display: inline-block;
-    background: -webkit-linear-gradient(rgba(223, 222, 234, 0.8),rgb(200, 244, 255));
+    background: -webkit-linear-gradient(rgb(19, 141, 226),rgba(40, 142, 137, 0.2));
     opacity:0.9;
     padding:10px 30px;
     border-radius:100px;
@@ -514,4 +514,19 @@ input.form-control::-webkit-input-placeholder{
     box-shadow:0 0 15px #222;
     color:orange;
     transition:all 0.1s ease-out 0.1s;
+}
+.data{
+    position:relative;
+    padding-left:100px;
+    min-width:800px;
+    height:auto;
+}
+.od_item{
+    border-radius:30px;
+    border:1px solid;
+    padding:5px 20px;
+    margin:10px;
+}
+#od_item_list li{
+    list-style:none;
 }

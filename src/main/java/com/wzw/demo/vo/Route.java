@@ -5,6 +5,15 @@ import java.util.List;
 public class Route {
     private List<Spot> spots;
     private Integer spotsNumber,companyId,startSpotId,endSpotId,routeId;
+    private String route;
+
+    public String getRoute() {
+        return route;
+    }
+
+    public void setRoute(String route) {
+        this.route = route;
+    }
 
     public Integer getRouteId() {
         return routeId;

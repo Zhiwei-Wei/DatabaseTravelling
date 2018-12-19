@@ -1,5 +1,6 @@
 package com.wzw.demo.repo;
 
+import com.wzw.demo.vo.Route;
 import com.wzw.demo.vo.TravelItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -204,4 +205,5 @@ public class RouteRepository {
         }
         return route.toString().trim();
     }
+
 }

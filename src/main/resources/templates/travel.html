@@ -152,7 +152,8 @@
             <label>服务等级</label>
             <ul class="travel_selector">
                 <li>
-                    <a href="javascript:void(0);" onclick="ajax_getUrl(this,'service')" th:text="不限">
+                    <a href="javascript:void(0);" onclick="ajax_getUrl(this,'service')">
+                        <span th:text="不限"></span>
                         <input type="hidden" th:name="id" th:value="'0'">
                     </a>
                 </li>

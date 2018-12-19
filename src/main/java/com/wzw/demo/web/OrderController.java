@@ -27,7 +27,9 @@ public class OrderController {
             return "login.html";
         }else{
             model.addAttribute("page","dqdd");
+            System.out.println(id);
             List<Order> orders = orderRepository.getCurOrders(id, 1);
+            System.out.println(orders.size());
             List<OrderInfo> orderInfos = orderRepository.getOrderInfos(orders);
             int maxPage = orderRepository.getCurMaxPage(id);
             model.addAttribute("status",CURRENT_ORDERS);

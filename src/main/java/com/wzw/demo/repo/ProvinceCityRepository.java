@@ -48,4 +48,36 @@ public class ProvinceCityRepository {
                 });
         return provinces;
     }
+
+    public String getProvinceById(Integer pId){
+        return jdbcTemplate.query("select `name` from province where province_id=?"
+                , new PreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                        preparedStatement.setInt(1,pId);
+                    }
+                }, new RowMapper<String>(){
+
+                    @Override
+                    public String mapRow(ResultSet resultSet, int i) throws SQLException {
+                        return resultSet.getString(1);
+                    }
+                }).get(0);
+    }
+    public String getCityById(Integer pId, Integer cId){
+        return jdbcTemplate.query("select `name` from city where province_id=? and city_id=?"
+                , new PreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                        preparedStatement.setInt(1,pId);
+                        preparedStatement.setInt(2,cId);
+                    }
+                }, new RowMapper<String>(){
+
+                    @Override
+                    public String mapRow(ResultSet resultSet, int i) throws SQLException {
+                        return resultSet.getString(1);
+                    }
+                }).get(0);
+    }
 }

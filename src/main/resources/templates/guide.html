@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>查询数据</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/layout.css}">
+</head>
+<body>
+<header th:replace="header::header"></header>
+
+<div class="main data">
+    <form class="selector" th:action="@{/data}" method="post">
+        <select class="sel" name="company" >
+            <!--/*@thymesVar id="companies" type="java.util.List<com.wzw.demo.vo.Company>"*/-->
+            <option th:each="company:${companies}" th:value="${company.compId}">
+                <span th:text="${company.name}"></span>
+            </option>
+        </select>
+        <select class="sel" name="selector">
+            <option th:value="route">旅游路线</option>
+            <option th:value="customer">游客</option>
+            <option th:value="guide">导游</option>
+        </select>
+        <select class="sel" name="year">
+            <option th:value="2016">2016</option>
+            <option th:value="2017">2017</option>
+            <option th:value="2018">2018</option>
+            <option th:value="2019">2019</option>
+        </select>
+        <select class="sel" name="month">
+            <option th:value="1">1月</option>
+            <option th:value="2">2月</option>
+            <option th:value="3">3月</option>
+            <option th:value="4">4月</option>
+            <option th:value="5">5月</option>
+            <option th:value="6">6月</option>
+            <option th:value="7">7月</option>
+            <option th:value="8">8月</option>
+            <option th:value="9">9月</option>
+            <option th:value="10">10月</option>
+            <option th:value="11">11月</option>
+            <option th:value="12">12月</option>
+        </select>
+        <button class="btn-default">提交</button>
+    </form>
+    <span th:text="'该公司当月总业绩'+${#numbers.formatCurrency(sum)}"></span>
+    <table border="1">
+        <tr>
+            <th>导游编号</th>
+            <th>导游名称</th>
+            <th>总收入</th>
+        </tr>
+        <tr th:each="route:${guides}">
+            <td th:text="${route.guideId}"></td>
+            <td th:text="${route.guideName}"></td>
+            <td th:text="${#numbers.formatCurrency(route.totalPrice)}"></td>
+        </tr>
+    </table>
+</div>
+
+<footer th:replace="footer::footer"></footer>
+<script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+</body>
+</html>

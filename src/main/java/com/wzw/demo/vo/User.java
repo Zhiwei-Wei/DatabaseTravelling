@@ -1,7 +1,7 @@
 package com.wzw.demo.vo;
 
 public class User {
-    public static final Integer CUSTOMER=1,COMPANY=2,ADMIN=3;
+    public static final Integer CUSTOMER=1,COMPANY=2,ADMIN=0;
     private Integer uid,role;
     private String nickname;
     private String password;

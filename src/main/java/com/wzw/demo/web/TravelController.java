@@ -123,6 +123,11 @@ public class TravelController {
 
     @RequestMapping(value = "/buyIt", method = RequestMethod.POST)
     public String order(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Integer id = (Integer) request.getSession().getAttribute("uid");
+        if(id==null){
+            response.sendRedirect("/login");
+            return "/index";
+        }
         int size = Integer.parseInt(request.getParameter("cus_num"));
         int gid = Integer.parseInt(request.getParameter("groupId"));
         List<Customer> customers = new ArrayList<>();
@@ -144,7 +149,7 @@ public class TravelController {
             customer.setWorkUnit(request.getParameter("workUnit_"+i));
             customers.add(customer);
         }
-        customerRepository.joinCustomersIntoGroup(gid, customers);
+        customerRepository.joinCustomersIntoGroup(gid, customers, id);
         response.sendRedirect("/myorder");
         return "/index.html";
     }
