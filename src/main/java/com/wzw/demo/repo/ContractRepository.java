@@ -1,6 +1,5 @@
 package com.wzw.demo.repo;
 
-import com.netflix.discovery.converters.Auto;
 import com.wzw.demo.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;

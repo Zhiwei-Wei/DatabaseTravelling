@@ -6,12 +6,12 @@
     <link type="text/css" rel="stylesheet" th:href="@{/css/layout.css}">
 </head>
 <body>
-<header th:replace="header::header"></header>
+<header th:replace="/fragment/header::header"></header>
 <div style="margin:0 10%;" class="main">
     <h3>没有做完...</h3>
     返回<a th:href="@{/index}">首页</a>⑧
 </div>
 
-<footer th:replace="footer::footer"></footer>
+<footer th:replace="/fragment/footer::footer"></footer>
 </body>
 </html>
